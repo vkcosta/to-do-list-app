@@ -1,4 +1,5 @@
 import { useState } from "react";
+import './listComponent.css';
 
 interface IItemList {
   key: number,
@@ -26,39 +27,41 @@ function ListComponent() {
   }];
 
   const [items, setItems] = useState<IItemList[]>(itemsInitial);
-
-  const [editingKey, setEditingKey] = useState<number | null>(null);
-  const [editingTitle, setEditingTitle] = useState<string>("");
-
-
+  const [editingItem, setEditingItem] = useState<IItemList | null>(null);
 
   function add() {
-    setItems([...items, {
-      key: items.length,
+    setEditingItem({
       done: false,
-      title: `Atividade ${items.length + 1}`,
-      notes: ''
-    }])
+      key: -1,
+      notes: '',
+      title: ''
+    })
   }
 
   function save() {
-    if (typeof editingKey === 'number') {
-      setItems(items =>
-        items.map(item =>
-          (item.key === editingKey) ?
-            { ...item, title: editingTitle } :
-            item
-        )
-      )
 
-      setEditingKey(null);
-      setEditingTitle("");
+    if (editingItem) {
+      //Atualiza
+      if (editingItem.key > -1) {
+        setItems(items =>
+          items.map(item => (item.key === editingItem.key) ? { ...editingItem } : item
+          )
+        )
+      } else {
+        //Adiciona
+        setItems([...items, {
+          ...editingItem,
+          key: items.length,
+        }])
+      }
+
+      //Limpo o estado de editingItem
+      setEditingItem(null);
     }
   }
 
-  function startUpdate(key: number, title: string) {
-    setEditingKey(key);
-    setEditingTitle(title);
+  function startEdit(item: IItemList) {
+    setEditingItem(item);
   }
 
   function remove(key: number) {
@@ -66,52 +69,74 @@ function ListComponent() {
   }
 
   function cancel() {
-    setEditingKey(null);
-    setEditingTitle("");
+    setEditingItem(null);
+  }
+
+  function handlerChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    if (editingItem) {
+      const { name, value, type, checked } = e.target as HTMLInputElement;
+      setEditingItem({
+        ...editingItem,
+        [name]: (type === 'checkbox') ? checked : value
+      })
+    }
   }
 
   return (
     <div>
-      <button onClick={add}>Add</button>
 
-      {
-        items.map((item: IItemList) => (
+      {(editingItem) ?
+        //Visualização para edição
+        <div className="formEditingItem">
+          <div>
+            <input name='done' type="checkbox" checked={editingItem.done} onChange={handlerChange}></input>
+            <label>Done</label>
+          </div>
 
-          (item.key === editingKey) ?  //Modo de edição         
-            <div key={item.key.toString()}>
-              <input
-                type="text"
-                value={editingTitle}
-                onChange={(e) => {
-                  setEditingTitle(e.target.value)
-                }}
-              ></input>
-              <button onClick={() => {
-                save();
-              }}>Save</button>
-              <button onClick={() => {
-                cancel();
-              }}>Cancel</button>
-            </div>
-            :
-            (
-              <div key={item.key.toString()}>
-                <div > {item.title} </div>
+          <div>Title</div>
+          <input name='title' type="text" value={editingItem.title} onChange={handlerChange}></input>
 
-                <button onClick={() => {
-                  startUpdate(item.key, item.title);
-                }}>Update</button>
+          <div>Notes</div>
+          <textarea name='notes' value={editingItem.notes} onChange={handlerChange}></textarea>
+          <br />
 
-                <button onClick={() => {
-                  remove(item.key);
-                }}>Remove</button>
-              </div>
-            )
+          <div className="buttons">
+            <button onClick={save}>Save</button>
+            <button onClick={cancel}>Cancel</button>
+          </div>
+        </div>
 
-        )
+        :
+        //Visualização normal
+        <div>
+          <button onClick={add} className="buttonAdd">Add</button>
 
-        )}
+          <div className="gridItem">
+            {items
+              .map((item: IItemList, index) => (
+                <div key={item.key.toString()} className={
+                  index % 2 === 0
+                    ? 'itemList line'
+                    : 'itemList'
+                }>
 
+                  <div className="itemListDone">{item.done ? "Done" : "Pending"}</div>
+
+                  <div > {item.title} </div>
+
+                  <div className="buttons">
+                    <button onClick={() => {
+                      startEdit(item);
+                    }}>Edit</button>
+
+                    <button onClick={() => {
+                      remove(item.key);
+                    }}>Remove</button>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>}
     </div>
 
   )
