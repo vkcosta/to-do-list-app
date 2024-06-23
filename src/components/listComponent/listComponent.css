@@ -1,0 +1,36 @@
+.gridItem {
+  margin-top: 15px;
+}
+
+.itemList {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1%;
+}
+
+.itemListDone {
+  border-radius: 5px;
+  width: auto;
+  text-align: center;
+  padding: 1px;
+}
+
+.buttonAdd {
+  margin: 15px 0px 0px 0px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  justify-content: end;
+}
+
+.formEditingItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.line{
+  background-color: #deeded;
+}
