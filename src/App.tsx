@@ -4,7 +4,7 @@ import NavBarComponent from "./components/navBarComponent/navBarComponent";
 function App() {
   return (
     <div>
-      <NavBarComponent title={"To Do List - Learning"} />
+      <NavBarComponent title={"To Do List"} />
       <ListComponent />
     </div>
   );

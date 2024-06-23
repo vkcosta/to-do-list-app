@@ -7,10 +7,8 @@ interface IItemList {
   notes: string,
 }
 
-
 function ListComponent() {
-
-  const [items, setItems] = useState<IItemList[]>([{
+  const itemsInitial = [{
     key: 0,
     title: "Atividade 1",
     notes: "Minha atividade 1",
@@ -25,7 +23,13 @@ function ListComponent() {
     title: "Atividade 3",
     notes: "Minha atividade 3",
     done: true
-  }]);
+  }];
+
+  const [items, setItems] = useState<IItemList[]>(itemsInitial);
+
+  const [editingKey, setEditingKey] = useState<number | null>(null);
+  const [editingTitle, setEditingTitle] = useState<string>("");
+
 
 
   function add() {
@@ -37,15 +41,69 @@ function ListComponent() {
     }])
   }
 
+  function save() {
+    if (typeof editingKey === 'number') {
+      setItems(items =>
+        items.map(item =>
+          (item.key === editingKey) ?
+            { ...item, title: editingTitle } :
+            item
+        )
+      )
+
+      setEditingKey(null);
+      setEditingTitle("");
+    }
+  }
+
+  function startUpdate(key: number, title: string) {
+    setEditingKey(key);
+    setEditingTitle(title);
+  }
+
+  function remove(key: number) {
+    setItems([...items.filter(item => item.key !== key)]);
+  }
+
+
   return (
-
     <div>
-
       <button onClick={add}>Add</button>
 
-      {items.map((item: IItemList) => (
-        <div key={item.key.toString()}> {item.title} </div>
-      ))}
+      {
+        items.map((item: IItemList) => (
+
+          (item.key === editingKey) ?  //Modo de edição         
+            <div key={item.key.toString()}>
+              <input
+                type="text"
+                value={editingTitle}
+                onChange={(e) => {
+                  setEditingTitle(e.target.value)
+                }}
+              ></input>
+              <button onClick={() => {
+                save();
+              }}>Save</button>
+            </div>
+            :
+            (
+              <div key={item.key.toString()}>
+                <div > {item.title} </div>
+
+                <button onClick={() => {
+                  startUpdate(item.key, item.title);
+                }}>Update</button>
+
+                <button onClick={() => {
+                  remove(item.key);
+                }}>Remove</button>
+              </div>
+            )
+
+        )
+
+        )}
 
     </div>
 
@@ -53,3 +111,16 @@ function ListComponent() {
 }
 
 export default ListComponent;
+
+
+/* 
+<div key={item.key.toString()}>
+          <div > {item.title} </div>
+          
+          <button onClick={() => {
+            update(item.key);
+          }}>Update</button>
+          <button onClick={() => {
+            remove(item.key);
+          }}>Remove</button>
+        </div> */
