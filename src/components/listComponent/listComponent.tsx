@@ -65,6 +65,10 @@ function ListComponent() {
     setItems([...items.filter(item => item.key !== key)]);
   }
 
+  function cancel() {
+    setEditingKey(null);
+    setEditingTitle("");
+  }
 
   return (
     <div>
@@ -85,6 +89,9 @@ function ListComponent() {
               <button onClick={() => {
                 save();
               }}>Save</button>
+              <button onClick={() => {
+                cancel();
+              }}>Cancel</button>
             </div>
             :
             (
