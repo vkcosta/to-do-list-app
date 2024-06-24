@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import './listComponent.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAdd, faCancel, faEdit, faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -11,25 +11,24 @@ interface IItemList {
 }
 
 function ListComponent() {
-  const itemsInitial = [{
-    key: 0,
-    title: "Atividade 1",
-    notes: "Minha atividade 1",
-    done: false
-  }, {
-    key: 1,
-    title: "Atividade 2",
-    notes: "Minha atividade 2",
-    done: false
-  }, {
-    key: 2,
-    title: "Atividade 3",
-    notes: "Minha atividade 3",
-    done: true
-  }];
-
-  const [items, setItems] = useState<IItemList[]>(itemsInitial);
+  const [items, setItems] = useState<IItemList[]>([]);
   const [editingItem, setEditingItem] = useState<IItemList | null>(null);
+
+  useEffect(() => {
+    fillArray(100);
+  }, [])
+
+  function fillArray(length: number) {
+    const newArray = Array.from({ length: length }, (_, index) => ({
+      key: index,
+      title: `Title ${index + 1}`,
+      notes: `Notes ${index + 1}`,
+      done: index % 2 === 0
+    }));
+    setItems([...newArray]);
+  };
+
+
 
   function add() {
     setEditingItem({
@@ -89,18 +88,22 @@ function ListComponent() {
 
       {(editingItem) ?
         //Visualização para edição
-        <div className="formEditingItem">
+        <div className="formEditing">
           <div>
             <input name='done' type="checkbox" checked={editingItem.done} onChange={handlerChange}></input>
             <label>Done</label>
           </div>
 
-          <div>Title</div>
-          <input name='title' type="text" value={editingItem.title} onChange={handlerChange}></input>
+          <div className="formEditingItem">
+            <label>Title:</label>
+            <input name='title' type="text" value={editingItem.title} onChange={handlerChange}></input>
+          </div>
 
-          <div>Notes</div>
-          <textarea name='notes' value={editingItem.notes} onChange={handlerChange}></textarea>
-          <br />
+
+          <div className="formEditingItem">
+            <label>Notes:</label>
+            <textarea name='notes' rows={10} value={editingItem.notes} onChange={handlerChange}></textarea>
+          </div>
 
           <div className="buttons">
             <button onClick={save} title="Save" className="button">
@@ -160,16 +163,3 @@ function ListComponent() {
 }
 
 export default ListComponent;
-
-
-/* 
-<div key={item.key.toString()}>
-          <div > {item.title} </div>
-          
-          <button onClick={() => {
-            update(item.key);
-          }}>Update</button>
-          <button onClick={() => {
-            remove(item.key);
-          }}>Remove</button>
-        </div> */

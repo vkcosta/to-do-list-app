@@ -32,7 +32,12 @@
   flex-direction: row;
   gap: 5px;
   justify-content: end;
-  margin: 0px 5px 0px 0px;
+}
+
+.formEditing {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .formEditingItem {
