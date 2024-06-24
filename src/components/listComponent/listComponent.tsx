@@ -1,7 +1,7 @@
 import { useState } from "react";
 import './listComponent.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAdd, faEdit, faRemove } from "@fortawesome/free-solid-svg-icons";
+import { faAdd, faCancel, faEdit, faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 interface IItemList {
   key: number,
@@ -103,17 +103,24 @@ function ListComponent() {
           <br />
 
           <div className="buttons">
-            <button onClick={save}>Save</button>
-            <button onClick={cancel}>Cancel</button>
+            <button onClick={save} title="Save" className="button">
+              <FontAwesomeIcon icon={faSave}></FontAwesomeIcon>
+              Save</button>
+            <button onClick={cancel} className="button">
+              <FontAwesomeIcon icon={faCancel}></FontAwesomeIcon>
+              Cancel</button>
           </div>
         </div>
 
         :
         //Visualização normal
         <div>
-          <button onClick={add} className="buttonAdd" title="Add">
-            <FontAwesomeIcon icon={faAdd}></FontAwesomeIcon>
+          <div className="buttonAdd">
+            <button onClick={add} className="button" title="Add">
+              <FontAwesomeIcon icon={faAdd}></FontAwesomeIcon>
+              Add
             </button>
+          </div>
 
           <div className="gridItem">
             {items
@@ -129,17 +136,19 @@ function ListComponent() {
                   <div > {item.title} </div>
 
                   <div className="buttons">
-                    <button title="Edit" onClick={() => {
+                    <button title="Edit" className="button" onClick={() => {
                       startEdit(item);
                     }}>
                       <FontAwesomeIcon icon={faEdit}></FontAwesomeIcon>
-                      </button>
+                      {/* Edit */}
+                    </button>
 
-                    <button title="Remove" onClick={() => {
+                    <button title="Remove" className="button" onClick={() => {
                       remove(item.key);
                     }}>
-                      <FontAwesomeIcon icon={faRemove}></FontAwesomeIcon>
-                      </button>
+                      <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
+                      {/* Remove */}
+                    </button>
                   </div>
                 </div>
               ))}

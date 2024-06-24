@@ -5,7 +5,10 @@
 .itemList {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-top: 1%;
+  height: 32px;
+  width: 100%;
 }
 
 .itemListDone {
@@ -13,6 +16,11 @@
   width: auto;
   text-align: center;
   padding: 1px;
+}
+
+.button {
+  display: flex;
+  gap: 5px;
 }
 
 .buttonAdd {
@@ -24,6 +32,7 @@
   flex-direction: row;
   gap: 5px;
   justify-content: end;
+  margin: 0px 5px 0px 0px;
 }
 
 .formEditingItem {
