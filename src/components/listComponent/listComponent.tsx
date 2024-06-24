@@ -1,5 +1,7 @@
 import { useState } from "react";
 import './listComponent.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAdd, faEdit, faRemove } from "@fortawesome/free-solid-svg-icons";
 
 interface IItemList {
   key: number,
@@ -83,7 +85,7 @@ function ListComponent() {
   }
 
   return (
-    <div>
+    <div className="container">
 
       {(editingItem) ?
         //Visualização para edição
@@ -109,7 +111,9 @@ function ListComponent() {
         :
         //Visualização normal
         <div>
-          <button onClick={add} className="buttonAdd">Add</button>
+          <button onClick={add} className="buttonAdd" title="Add">
+            <FontAwesomeIcon icon={faAdd}></FontAwesomeIcon>
+            </button>
 
           <div className="gridItem">
             {items
@@ -125,13 +129,17 @@ function ListComponent() {
                   <div > {item.title} </div>
 
                   <div className="buttons">
-                    <button onClick={() => {
+                    <button title="Edit" onClick={() => {
                       startEdit(item);
-                    }}>Edit</button>
+                    }}>
+                      <FontAwesomeIcon icon={faEdit}></FontAwesomeIcon>
+                      </button>
 
-                    <button onClick={() => {
+                    <button title="Remove" onClick={() => {
                       remove(item.key);
-                    }}>Remove</button>
+                    }}>
+                      <FontAwesomeIcon icon={faRemove}></FontAwesomeIcon>
+                      </button>
                   </div>
                 </div>
               ))}
