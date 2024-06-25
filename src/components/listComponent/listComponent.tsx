@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import './listComponent.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAdd, faCancel, faEdit, faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faAdd, faCancel, faEdit, faSave, faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 interface IItemList {
   key: number,
@@ -13,10 +13,15 @@ interface IItemList {
 function ListComponent() {
   const [items, setItems] = useState<IItemList[]>([]);
   const [editingItem, setEditingItem] = useState<IItemList | null>(null);
+  const [filteredItem, setFilteredItem] = useState<IItemList[]>([]);
 
   useEffect(() => {
-    fillArray(100);
+    fillArray(0);
   }, [])
+
+  useEffect(() => {
+    setFilteredItem(items);
+  }, [items]);
 
   function fillArray(length: number) {
     const newArray = Array.from({ length: length }, (_, index) => ({
@@ -27,8 +32,6 @@ function ListComponent() {
     }));
     setItems([...newArray]);
   };
-
-
 
   function add() {
     setEditingItem({
@@ -83,6 +86,18 @@ function ListComponent() {
     }
   }
 
+  function filterItems(e: React.ChangeEvent<HTMLInputElement>) {
+
+    const value: string = e.target.value?.toLocaleLowerCase() ?? '';
+
+    if (value) {
+      const findItems = items.filter(item => item.title.toLocaleLowerCase().includes(value));
+      setFilteredItem(findItems)
+    } else {
+      setFilteredItem(items);
+    }
+  }
+
   return (
     <div className="container">
 
@@ -117,7 +132,17 @@ function ListComponent() {
 
         :
         //Visualização normal
-        <div>
+        <div className="gridContainer">
+          <div className="search-container">
+            <FontAwesomeIcon icon={faSearch} className="search-icon" />
+            <input
+              type="text"
+              name="search"
+              className="search-input"
+              onChange={(e) => filterItems(e)}
+            />
+          </div>
+
           <div className="buttonAdd">
             <button onClick={add} className="button" title="Add">
               <FontAwesomeIcon icon={faAdd}></FontAwesomeIcon>
@@ -126,7 +151,7 @@ function ListComponent() {
           </div>
 
           <div className="gridItem">
-            {items
+            {filteredItem
               .map((item: IItemList, index) => (
                 <div key={item.key.toString()} className={
                   index % 2 === 0

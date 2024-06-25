@@ -6,7 +6,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 1%;
   height: 32px;
   width: 100%;
 }
@@ -38,6 +37,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  width: 50%;
 }
 
 .formEditingItem {
@@ -47,4 +47,39 @@
 
 .line {
   background-color: #deeded;
+}
+
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px; /* Ajuste a posição horizontal conforme necessário */
+  color: #888; /* Cor do ícone */
+}
+
+.search-input {
+  padding-left: 30px; /* Espaço suficiente para o ícone */
+  height: 30px; /* Altura do input */
+  width: 100%; /* Largura total */
+  box-sizing: border-box; /* Inclui padding e border no tamanho total */
+}
+
+.container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px 0px 0px 0px;
+
+}
+
+.gridContainer{
+  width: 50%;
+}
+
+body{
+  height: 100%;
 }
