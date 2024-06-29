@@ -1,85 +1,85 @@
-.gridItem {
+/* .gridItem {
   margin-top: 15px;
-}
+} */
 
-.itemList {
+/* .itemList {
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 32px;
   width: 100%;
-}
+} */
 
-.itemListDone {
+/* .itemListDone {
   border-radius: 5px;
   width: auto;
   text-align: center;
   padding: 1px;
-}
+} */
 
-.button {
+/* .button {
   display: flex;
   gap: 5px;
-}
+} */
 
-.buttonAdd {
+/* .buttonAdd {
   margin: 15px 0px 0px 0px;
-}
+} */
 
-.buttons {
+/* .buttons {
   display: flex;
   flex-direction: row;
   gap: 5px;
   justify-content: end;
-}
+} */
 
-.formEditing {
+/* .formEditing {
   display: flex;
   flex-direction: column;
   gap: 10px;
   width: 50%;
-}
+} */
 
-.formEditingItem {
+/* .formEditingItem {
   display: flex;
   flex-direction: column;
-}
+} */
 
-.line {
+/* .line {
   background-color: #deeded;
-}
+} */
 
-.search-container {
+/* .search-container {
   position: relative;
   display: flex;
   align-items: center;
-}
-
+} */
+/* 
 .search-icon {
   position: absolute;
-  left: 10px; /* Ajuste a posição horizontal conforme necessário */
-  color: #888; /* Cor do ícone */
-}
-
+  left: 10px; 
+  color: #888;
+} */
+/* 
 .search-input {
-  padding-left: 30px; /* Espaço suficiente para o ícone */
-  height: 30px; /* Altura do input */
-  width: 100%; /* Largura total */
-  box-sizing: border-box; /* Inclui padding e border no tamanho total */
-}
+  padding-left: 30px;
+  height: 30px; 
+  width: 100%; 
+  box-sizing: border-box;
+} */
 
-.container{
+/* .container{
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 10px 0px 0px 0px;
 
-}
+} */
 
-.gridContainer{
+/* .gridContainer{
   width: 50%;
-}
-
+} */
+/* 
 body{
   height: 100%;
-}
+} */

@@ -99,32 +99,34 @@ function ListComponent() {
   }
 
   return (
-    <div className="container">
+    <div className="flex flex-col items-center mt-2">
 
       {(editingItem) ?
         //Visualização para edição
-        <div className="formEditing">
+        <div className="flex flex-col gap-4 w-1/2">
           <div>
             <input name='done' type="checkbox" checked={editingItem.done} onChange={handlerChange}></input>
             <label>Done</label>
           </div>
 
-          <div className="formEditingItem">
+          <div className="flex flex-col">
             <label>Title:</label>
-            <input name='title' type="text" value={editingItem.title} onChange={handlerChange}></input>
+            <input name='title' type="text" value={editingItem.title} onChange={handlerChange}
+            className="border border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-blue-500"></input>
           </div>
 
 
-          <div className="formEditingItem">
+          <div className="flex flex-col">
             <label>Notes:</label>
-            <textarea name='notes' rows={10} value={editingItem.notes} onChange={handlerChange}></textarea>
+            <textarea name='notes' rows={10} value={editingItem.notes} onChange={handlerChange}
+            className="border border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-blue-500"></textarea>
           </div>
 
-          <div className="buttons">
-            <button onClick={save} title="Save" className="button">
+          <div className="flex mt-4 justify-end gap-1">
+            <button onClick={save} title="Save" className="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">
               <FontAwesomeIcon icon={faSave}></FontAwesomeIcon>
               Save</button>
-            <button onClick={cancel} className="button">
+            <button onClick={cancel} className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
               <FontAwesomeIcon icon={faCancel}></FontAwesomeIcon>
               Cancel</button>
           </div>
@@ -132,50 +134,46 @@ function ListComponent() {
 
         :
         //Visualização normal
-        <div className="gridContainer">
-          <div className="search-container">
-            <FontAwesomeIcon icon={faSearch} className="search-icon" />
+        <div className="w-1/2">
+          <div className="relative flex items-center">
+            <FontAwesomeIcon icon={faSearch} className="absolute left-3 text-gray-500" />
             <input
               type="text"
               name="search"
-              className="search-input"
+              className="pl-10 h-10 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
               onChange={(e) => filterItems(e)}
             />
           </div>
 
-          <div className="buttonAdd">
-            <button onClick={add} className="button" title="Add">
+          <div className="mt-4">
+            <button onClick={add} className="flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded" title="Add">
               <FontAwesomeIcon icon={faAdd}></FontAwesomeIcon>
               Add
             </button>
           </div>
 
-          <div className="gridItem">
+          <div className="mt-4">
             {filteredItem
               .map((item: IItemList, index) => (
-                <div key={item.key.toString()} className={
-                  index % 2 === 0
-                    ? 'itemList line'
-                    : 'itemList'
-                }>
+                <div key={item.key.toString()} className={`flex items-center justify-between h-12 px-4 ${index % 2 === 0 ? 'bg-gray-100' : ''}`}>
 
-                  <div className="itemListDone">{item.done ? "Done" : "Pending"}</div>
+                  <div className="rounded-md w-auto text-center p-1">{item.done ? "Done" : "Pending"}</div>
 
                   <div > {item.title} </div>
 
-                  <div className="buttons">
-                    <button title="Edit" className="button" onClick={() => {
+                  <div className="flex items-center gap-2">
+                    <button title="Edit" className="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded" onClick={() => {
                       startEdit(item);
                     }}>
                       <FontAwesomeIcon icon={faEdit}></FontAwesomeIcon>
-                      {/* Edit */}
+                      Edit
                     </button>
 
-                    <button title="Remove" className="button" onClick={() => {
+                    <button title="Remove" className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded" onClick={() => {
                       remove(item.key);
                     }}>
                       <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
-                      {/* Remove */}
+                      Remove
                     </button>
                   </div>
                 </div>
