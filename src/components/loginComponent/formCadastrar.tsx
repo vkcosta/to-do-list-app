@@ -1,8 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import FormService from "./formService";
-import { faArrowAltCircleLeft } from "@fortawesome/free-solid-svg-icons";
+import { faArrowAltCircleLeft, faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 import { useFirebase } from "../../firebase/firebaseContext";
 import { useState } from "react";
+import { faUser } from "@fortawesome/free-regular-svg-icons";
 
 interface FormAccount {
   email: string,
@@ -49,11 +50,16 @@ export default function FormCadastrar() {
 
   return (
 
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex justify-center items-center h-full">
 
-      <div className="flex flex-col items-center gap-4 w-1/2 bg-gray-200 p-4" >
+      <div className="flex flex-col items-center gap-4 w-1/2 bg-gray-200 p-4 rounded-md" >
+
 
         <label>Registre-se</label>
+       {/*  <button title="Voltar" className="flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md transition duration-300 ease-in-out transform hover:scale-105 h-10" onClick={(_e) => { acao.$action?.next('entrar') }}>
+            <FontAwesomeIcon icon={faArrowAltCircleLeft}></FontAwesomeIcon>
+            voltar</button>
+ */}
         <form className="max-w-sm mx-auto">
           <div className="mb-5">
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
@@ -92,11 +98,13 @@ export default function FormCadastrar() {
           </div>
           <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">I agree with the <a href="#" className="text-blue-600 hover:underline dark:text-blue-500">terms and conditions</a></label>
         </div> */}
-          <button type="submit" className="flex items-center gap-1 bg-white-500 hover:bg-white-600 text-black px-3 py-1 rounded h-10 mb-5" onClick={register}>Register new account</button>
+          {/*  <button type="submit" className="flex items-center gap-1 bg-white-500 hover:bg-white-600 text-black px-3 py-1 rounded h-10 mb-5" onClick={register}>Register new account</button> */}
 
-          <button title="Voltar" className="flex items-center gap-1 bg-white-500 hover:bg-white-600 text-black px-3 py-1 rounded h-10 mb-5" onClick={(_e) => { acao.$action?.next('entrar') }}>
-            <FontAwesomeIcon icon={faArrowAltCircleLeft}></FontAwesomeIcon>
-            voltar</button>
+          <button onClick={register} title="Save" className="flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md transition duration-300 ease-in-out transform hover:scale-105 h-10">
+            <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
+            Register new account</button>
+
+          
         </form>
 
 

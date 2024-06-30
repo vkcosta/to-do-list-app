@@ -1,4 +1,4 @@
-import { faArrowAltCircleLeft, faAt, faListUl, faLock, faSignInAlt } from "@fortawesome/free-solid-svg-icons";
+import { faAt, faListUl, faLock, faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FirebaseContextProps, useFirebase } from "../../firebase/firebaseContext";
 import { useState } from "react";
@@ -50,7 +50,7 @@ export default function FormEntrar() {
     <div className="flex justify-center items-center h-full ">
 
       <div className="flex flex-col items-center gap-4 w-1/4 bg-gray-200 p-4 rounded-md" >
-        <FontAwesomeIcon icon={faListUl}  size="lg"/>
+        <FontAwesomeIcon icon={faListUl} size="lg" />
         <label >To Do List</label>
 
         <div className="flex flex-col gap-4 w-full">
