@@ -3,36 +3,28 @@
 // import React, { useState } from "react";
 // import { FirebaseContextProps, useFirebase } from "../../firebase/firebaseContext";
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import FormEntrar from "./formEntrar";
+import FormCadastrar from "./formCadastrar";
+import FormService from "./formService";
 
 
 
 export default function Login() {
-  // const firebaseContext: FirebaseContextProps | undefined= useFirebase();
-  // const auth = useRef<Auth | undefined>(undefined);
+  const [acaoAtual, setAcaoAtual] = useState('');
 
-  // useEffect(() => {
-  //   if (firebase) {
-
-  //   }
-  // }, [firebase])
-
-  const [rotaAtual, setRotaAtual] = useState<"entrar" | 'cadastrar' | 'login'>('login');
-
-
-  const handleEventFromChild = (data: "entrar" | 'cadastrar') => {
-    setRotaAtual(data);
-  };
-
+  useEffect(() => {
+    const acao = FormService.initialize();
+    acao.$action?.subscribe(acao => {
+      setAcaoAtual(acao)
+    })
+  }, [acaoAtual]);
 
   return (
-    (rotaAtual === "entrar") ?
+    (acaoAtual === "entrar") ?
 
-      <FormEntrar onButtonClick={handleEventFromChild}></FormEntrar>
+      <FormEntrar></FormEntrar>
       :
-      (<div>Cadastrar</div>)
-
-
+      <FormCadastrar></FormCadastrar>
   )
 }

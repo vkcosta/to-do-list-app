@@ -1,6 +1,5 @@
 import { FirebaseApp, FirebaseOptions, initializeApp, getApps } from 'firebase/app';
 import { Analytics, getAnalytics } from 'firebase/analytics'
-import { Firestore, getFirestore } from "firebase/firestore"; // se você for usar Firestore
 import { Auth, UserCredential, createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 export const firebaseConfig: FirebaseOptions = {
@@ -105,9 +104,9 @@ class FirebaseFirestore extends Firebase {
     super(configuracao, name)
   }
 
-  getFirestore(): Firestore {
+ /*  getFirestore(): Firestore {
     return getFirestore(super.getApp())
-  }
+  } */
 }
 
 export { Firebase, FirebaseAuth, FirebaseAnalytics, FirebaseFirestore }
