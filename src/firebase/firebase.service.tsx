@@ -45,7 +45,7 @@ class FirebaseAuth extends Firebase {
     super(configuracao, name)
   }
 
-  getAuth(): Auth | undefined {
+  getAuth(): Auth {
     return getAuth(super.getApp())
   }
 
@@ -54,7 +54,7 @@ class FirebaseAuth extends Firebase {
       const auth = this.getAuth();
       if (!auth) throw new Error('Firebase auth não inicializado');
       const credential = await signInWithEmailAndPassword(auth, email, password);
-      this.registerSession(credential)
+      // this.registerSession(credential)
       return credential
     } catch (error) {
       console.error(error)
@@ -62,9 +62,9 @@ class FirebaseAuth extends Firebase {
     }
   }
 
-  private registerSession(credential: UserCredential) {
-    sessionStorage.setItem('credential', JSON.stringify(credential));
-  }
+  // private registerSession(credential: UserCredential) {
+  //   sessionStorage.setItem('credential', JSON.stringify(credential));
+  // }
 
   cadastrar(email: string, password: string): Promise<UserCredential> {
     const auth = this.getAuth();
@@ -77,7 +77,7 @@ class FirebaseAuth extends Firebase {
       const auth = this.getAuth();
       if (!auth) throw new Error('Firebase auth não inicializado');
       await signOut(auth);
-      this.cleanSession();
+      // this.cleanSession();
       return
     } catch (error) {
       console.error(error)
@@ -85,9 +85,9 @@ class FirebaseAuth extends Firebase {
     }
   }
 
-  private cleanSession() {
-    sessionStorage.removeItem('credential');
-  }
+  // private cleanSession() {
+  //   sessionStorage.removeItem('credential');
+  // }
 }
 
 class FirebaseAnalytics extends Firebase {
@@ -95,7 +95,7 @@ class FirebaseAnalytics extends Firebase {
     super(configuracao, name)
   }
 
-  getAnalytics(): Analytics | undefined {
+  getAnalytics(): Analytics {
     return getAnalytics(super.getApp())
   }
 }
@@ -105,7 +105,7 @@ class FirebaseFirestore extends Firebase {
     super(configuracao, name)
   }
 
-  getFirestore(): Firestore | undefined {
+  getFirestore(): Firestore {
     return getFirestore(super.getApp())
   }
 }

@@ -1,24 +1,26 @@
-import { useEffect, useRef } from "react";
+// import { useEffect, useRef } from "react";
 import ListComponent from "./components/listComponent/listComponent";
 import Login from "./components/loginComponent/loginComponent";
 import NavBarComponent from "./components/navBarComponent/navBarComponent";
 import { useFirebase } from "./firebase/firebaseContext";
-import { Auth } from "firebase/auth";
+// import { Auth } from "firebase/auth";
 
 function App() {
 
-  const firebase = useFirebase();
-  const auth = useRef<Auth | undefined>(undefined);
+  const firebaseContext = useFirebase();
+  // const auth = useRef<Auth | undefined>(undefined);
 
-  useEffect(() => {
-    if (firebase) {
-      auth.current = firebase.getAuth();
-    }
-  }, [firebase])
+  // useEffect(() => {
+  //   if (firebaseContext) {
+  //     auth.current = firebase.getAuth();
+  //   }
+  // }, [firebaseContext])
+
+  console.log('currentUser', firebaseContext?.currentUser)
 
   return (
     <div>
-      {!auth.current?.currentUser ?
+      {!firebaseContext?.currentUser ?
         <Login></Login> :
         <div>
           <NavBarComponent title={"To Do List"} />
