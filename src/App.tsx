@@ -19,7 +19,7 @@ function App() {
   console.log('currentUser', firebaseContext?.currentUser)
 
   return (
-    <div>
+    <div className="h-full">
       {!firebaseContext?.currentUser ?
         <Login></Login> :
         <div>

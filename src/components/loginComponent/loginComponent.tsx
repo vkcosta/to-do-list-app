@@ -9,7 +9,6 @@ import FormCadastrar from "./formCadastrar";
 import FormService from "./formService";
 
 
-
 export default function Login() {
   const [acaoAtual, setAcaoAtual] = useState('');
 
@@ -26,5 +25,6 @@ export default function Login() {
       <FormEntrar></FormEntrar>
       :
       <FormCadastrar></FormCadastrar>
+
   )
 }
