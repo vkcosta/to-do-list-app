@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import './listComponent.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAdd, faCancel, faEdit, faSave, faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
 
