@@ -1,9 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import FormService from "./formService";
-import { faArrowAltCircleLeft, faSignInAlt } from "@fortawesome/free-solid-svg-icons";
+import { faAt, faListUl, faLock } from "@fortawesome/free-solid-svg-icons";
 import { useFirebase } from "../../firebase/firebaseContext";
 import { useState } from "react";
-import { faUser } from "@fortawesome/free-regular-svg-icons";
 
 interface FormAccount {
   email: string,
@@ -50,63 +49,45 @@ export default function FormCadastrar() {
 
   return (
 
-    <div className="flex justify-center items-center h-full">
+    <div className="flex justify-center items-center h-full ">
 
-      <div className="flex flex-col items-center gap-4 w-1/2 bg-gray-200 p-4 rounded-md" >
+      <div className="flex flex-col items-center gap-4 w-1/4 bg-gray-200 p-4 rounded-md" >
+        <FontAwesomeIcon icon={faListUl} size="lg" />
+        <label >Register To Do List</label>
 
-
-        <label>Registre-se</label>
-       {/*  <button title="Voltar" className="flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md transition duration-300 ease-in-out transform hover:scale-105 h-10" onClick={(_e) => { acao.$action?.next('entrar') }}>
-            <FontAwesomeIcon icon={faArrowAltCircleLeft}></FontAwesomeIcon>
-            voltar</button>
- */}
-        <form className="max-w-sm mx-auto">
-          <div className="mb-5">
-            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+        <div className="flex flex-col gap-4 w-full">
+          <div className="relative flex items-center">
+            <FontAwesomeIcon icon={faAt} className="absolute left-3 text-gray-500" />
             <input
-              id='email'
               type="text"
               name="email"
               placeholder="Email"
-              className="h-10 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-              onChange={updateForm} required />
+              className="pl-10 h-10 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+              onChange={(event) => updateForm(event)}
+            />
           </div>
-          <div className="mb-5">
-            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your password</label>
+          <div className="relative flex items-center">
+            <FontAwesomeIcon icon={faLock} className="absolute left-3 text-gray-500" />
             <input
-              id='password'
               type="password"
               name="password"
               placeholder="Password"
-              className="h-10 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-              onChange={updateForm} required
+              className="pl-10 h-10 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+              onChange={(event) => updateForm(event)}
             />
           </div>
-          {/* <div className="mb-5">
-            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Repeat password</label>
-            <input
-              id="repeat-password"
-              type="password"
-              name="repeat-password"
-              placeholder="Repeat Password"
-              className="h-10 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500" required
-            />
-          </div> */}
-          {/* <div className="flex items-start mb-5">
-          <div className="flex items-center h-5">
-            <input id="terms" type="checkbox" value="" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" required />
-          </div>
-          <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">I agree with the <a href="#" className="text-blue-600 hover:underline dark:text-blue-500">terms and conditions</a></label>
-        </div> */}
-          {/*  <button type="submit" className="flex items-center gap-1 bg-white-500 hover:bg-white-600 text-black px-3 py-1 rounded h-10 mb-5" onClick={register}>Register new account</button> */}
+        </div>
 
-          <button onClick={register} title="Save" className="flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md transition duration-300 ease-in-out transform hover:scale-105 h-10">
-            <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
-            Register new account</button>
+        <div className="flex flex-col justify-between w-full gap-1">
 
-          
-        </form>
 
+          <button onClick={register} title="Register" className="flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md transition duration-300 ease-in-out transform hover:scale-105 h-10">
+            Registrar</button>
+          <button onClick={(_e) => { acao.$action?.next('entrar') }} title="Save"
+            className="flex items-center justify-center gap-2 bg-white-500 hover:bg-white-600 text-black font-semibold px-4 py-2 rounded-md transition duration-300 ease-in-out transform hover:scale-105 h-10"  >
+
+            voltar</button>
+        </div>
 
       </div>
     </div>

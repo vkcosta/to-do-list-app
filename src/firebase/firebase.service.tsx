@@ -1,6 +1,6 @@
 import { FirebaseApp, FirebaseOptions, initializeApp, getApps } from 'firebase/app';
 import { Analytics, getAnalytics } from 'firebase/analytics'
-import { Auth, UserCredential, createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { Auth, FacebookAuthProvider, GoogleAuthProvider, UserCredential, createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 
 export const firebaseConfig: FirebaseOptions = {
   apiKey: "AIzaSyDuM67qj3AYlYL0QkTSXOygQwrq2SazaUc",
@@ -61,9 +61,33 @@ class FirebaseAuth extends Firebase {
     }
   }
 
-  // private registerSession(credential: UserCredential) {
-  //   sessionStorage.setItem('credential', JSON.stringify(credential));
-  // }
+  async entrarComGoogle(): Promise<void> {
+    try {
+      const provider = new GoogleAuthProvider();
+      const auth = this.getAuth();
+
+      const result: UserCredential = await signInWithPopup(auth, provider)
+      GoogleAuthProvider.credentialFromResult(result);
+
+    } catch (error) {
+
+      console.error('Ocorreu um erro ao autenticar com Google.', error);
+    }
+  }
+
+  async entrarComFacebook(): Promise<void>{
+    try {
+      const provider = new FacebookAuthProvider();
+      const auth = this.getAuth();
+
+      const result: UserCredential = await signInWithPopup(auth, provider)
+      FacebookAuthProvider.credentialFromResult(result);
+
+    } catch (error) {
+
+      console.error('Ocorreu um erro ao autenticar com Facebook.', error);
+    }
+  }
 
   cadastrar(email: string, password: string): Promise<UserCredential> {
     const auth = this.getAuth();
@@ -104,9 +128,9 @@ class FirebaseFirestore extends Firebase {
     super(configuracao, name)
   }
 
- /*  getFirestore(): Firestore {
-    return getFirestore(super.getApp())
-  } */
+  /*  getFirestore(): Firestore {
+     return getFirestore(super.getApp())
+   } */
 }
 
 export { Firebase, FirebaseAuth, FirebaseAnalytics, FirebaseFirestore }
