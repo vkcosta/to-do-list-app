@@ -24,9 +24,17 @@ export default function FormEntrar() {
   const acao = FormService.initialize();
 
   function login() {
-    // console.log('logar', formLogin)
+    for (const prop in formLogin) {
+      // @ts-ignore
+      validateField(prop, formLogin[prop])
+    }
 
-    if (formLogin.email && formLogin.password) {
+    console.log('logar', formLogin)
+
+    const isValid = !Object.values(errors).some(error => error !== '') &&
+      !Object.values(formLogin).some(value => value === '');
+
+    if (isValid) {
 
       firebaseContext?.firebaseAuth?.entrar(formLogin.email, formLogin.password)
         .then(result => {
@@ -42,6 +50,7 @@ export default function FormEntrar() {
 
   function updateForm(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
+    validateField(name, value);
 
     setFormLogin({
       ...formLogin,
@@ -69,11 +78,6 @@ export default function FormEntrar() {
     setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
   };
 
-  const handleBlur = (e: any) => {
-    const { name, value } = e.target;
-    validateField(name, value);
-  };
-
   function handleSubmit() {
     for (const prop in formLogin) {
       // @ts-ignore
@@ -90,6 +94,7 @@ export default function FormEntrar() {
     }
   };
 
+
   return (
     <div className="flex justify-center items-center h-full ">
 
@@ -104,9 +109,9 @@ export default function FormEntrar() {
               type="text"
               name="email"
               placeholder="Email"
-              onBlur={handleBlur}
               className="pl-10 h-10 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
               onChange={(event) => updateForm(event)}
+              onKeyUp={(event) => event.key === 'Enter' ? login() : ''}
               required
             />
 
@@ -117,10 +122,10 @@ export default function FormEntrar() {
             <input
               type="password"
               name="password"
-              onBlur={handleBlur}
               placeholder="Password"
               className="pl-10 h-10 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
               onChange={(event) => updateForm(event)}
+              onKeyUp={(event) => event.key === 'Enter' ? login() : ''}
             />
 
             {errors.password && <p className="text-red-500 text-xs italic">{errors.password}</p>}

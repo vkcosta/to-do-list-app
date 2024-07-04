@@ -16,10 +16,20 @@ export default function FormCadastrar() {
     password: ''
   });
 
+  const [errors, setErrors] = useState<FormAccount>({ email: '', password: '' });
+
   const firebaseContext = useFirebase();
 
   async function register() {
-    if (!account.email || !account.password) {
+    for (const prop in account) {
+      // @ts-ignore
+      validateField(prop, account[prop])
+    }
+
+    const isValid = !Object.values(errors).some(error => error !== '') &&
+      !Object.values(account).some(value => value === '');
+
+    if (isValid) {
       try {
         await firebaseContext?.firebaseAuth?.cadastrar(
           account.email,
@@ -31,13 +41,33 @@ export default function FormCadastrar() {
       } catch (error) {
         console.error('Ocorreu um erro ao registrar a conta', error)
       }
-
-
     }
   }
 
+  function validateField(name: string, value: string) {
+    let error = '';
+
+    if (name === 'email') {
+      if (!value) {
+        error = 'O email é obrigatório';
+      } else if (!/\S+@\S+\.\S+/.test(value)) {
+        error = 'O email é inválido';
+      }
+    } else if (name === 'password') {
+      if (!value) {
+        error = 'A senha é obrigatória';
+      } else if (value.length < 6) {
+        error = 'A senha deve ter pelo menos 6 caracteres';
+      }
+    }
+
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
+  };
+
   function updateForm(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
+
+    validateField(name, value);
 
     setAccount({
       ...account,
@@ -56,8 +86,8 @@ export default function FormCadastrar() {
         <label >Register To Do List</label>
 
         <div className="flex flex-col gap-4 w-full">
-          <div className="relative flex items-center">
-            <FontAwesomeIcon icon={faAt} className="absolute left-3 text-gray-500" />
+          <div className="relative flex flex-col items-center">
+            <FontAwesomeIcon icon={faAt} className="absolute left-3 top-3 text-gray-500" />
             <input
               type="text"
               name="email"
@@ -65,9 +95,10 @@ export default function FormCadastrar() {
               className="pl-10 h-10 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
               onChange={(event) => updateForm(event)}
             />
+            {errors.email && <p className="text-red-500 text-xs italic">{errors.email}</p>}
           </div>
-          <div className="relative flex items-center">
-            <FontAwesomeIcon icon={faLock} className="absolute left-3 text-gray-500" />
+          <div className="relative flex flex-col items-center">
+            <FontAwesomeIcon icon={faLock} className="absolute left-3 top-3 text-gray-500" />
             <input
               type="password"
               name="password"
@@ -75,6 +106,7 @@ export default function FormCadastrar() {
               className="pl-10 h-10 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
               onChange={(event) => updateForm(event)}
             />
+            {errors.password && <p className="text-red-500 text-xs italic">{errors.password}</p>}
           </div>
         </div>
 
