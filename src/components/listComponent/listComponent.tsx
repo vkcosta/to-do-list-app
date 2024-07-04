@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAdd, faCancel, faEdit, faSave, faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 interface IItemList {
   key: number,
@@ -111,23 +111,27 @@ function ListComponent() {
           <div className="flex flex-col">
             <label>Title:</label>
             <input name='title' type="text" value={editingItem.title} onChange={handlerChange}
-            className="border border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-blue-500"></input>
+              className="border border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-blue-500"></input>
           </div>
 
 
           <div className="flex flex-col">
             <label>Notes:</label>
             <textarea name='notes' rows={10} value={editingItem.notes} onChange={handlerChange}
-            className="border border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-blue-500"></textarea>
+              className="border border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-blue-500"></textarea>
           </div>
 
           <div className="flex mt-4 justify-end gap-1">
-            <button onClick={save} title="Save" className="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">
-              <FontAwesomeIcon icon={faSave}></FontAwesomeIcon>
-              Save</button>
-            <button onClick={cancel} className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
-              <FontAwesomeIcon icon={faCancel}></FontAwesomeIcon>
+
+            <button onClick={cancel} className="flex items-center gap-1 bg-white-200 hover:bg-gray-200 text-gray-800 px-3 py-1 rounded">
+              {/* <FontAwesomeIcon icon={faCancel}></FontAwesomeIcon> */}
               Cancel</button>
+
+
+
+            <button onClick={save} title="Save" className="flex items-center gap-1 bg-blue-500 hover:bg-blue-500 text-white px-3 py-1 rounded">
+              {/* <FontAwesomeIcon icon={faSave}></FontAwesomeIcon> */}
+              Add Task</button>
           </div>
         </div>
 
@@ -145,9 +149,9 @@ function ListComponent() {
           </div>
 
           <div className="mt-4">
-            <button onClick={add} className="flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded" title="Add">
-              <FontAwesomeIcon icon={faAdd}></FontAwesomeIcon>
-              Add
+            <button onClick={add} className="flex items-center gap-1 bg-blue-500 hover:bg-blue-500 text-white px-3 py-1 rounded" title="Add Task">
+              {/* <FontAwesomeIcon icon={faAdd}></FontAwesomeIcon> */}
+              Add Task
             </button>
           </div>
 
@@ -165,14 +169,14 @@ function ListComponent() {
                       startEdit(item);
                     }}>
                       <FontAwesomeIcon icon={faEdit}></FontAwesomeIcon>
-                      Edit
+                      {/* Edit */}
                     </button>
 
                     <button title="Remove" className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded" onClick={() => {
                       remove(item.key);
                     }}>
                       <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
-                      Remove
+                      {/* Remove */}
                     </button>
                   </div>
                 </div>

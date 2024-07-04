@@ -16,9 +16,9 @@ function NavBarComponent({ title }: NavBarComponentProps) {
 
   return (
     <div className="w-full h-10 flex justify-center items-center text-white bg-backgroundNavBar">
-      {title}
+      <label className="flex-grow text-center">{title}</label>
 
-      <button onClick={sair} title="Save" className="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">
+      <button onClick={sair} title="Save" className="ml-auto flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">
         <FontAwesomeIcon icon={faSignOutAlt}></FontAwesomeIcon>
         Log out</button>
     </div>
