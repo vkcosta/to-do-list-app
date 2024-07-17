@@ -1,5 +1,7 @@
 import { BehaviorSubject } from "rxjs";
 
+//Ideia alternativa para mudar o layout do mesmo componente baseado no action
+//Futuramente poderá ser modificado para trabalhar com rotas no react
 export default class FormService {
 
   private constructor() { }

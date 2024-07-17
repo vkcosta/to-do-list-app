@@ -1,8 +1,13 @@
-import { FirebaseApp, FirebaseOptions, initializeApp, getApps } from 'firebase/app';
-import { Analytics, getAnalytics } from 'firebase/analytics'
-import { Auth, FacebookAuthProvider, GoogleAuthProvider, UserCredential, createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
+// import { getFirestore } from 'firebase/firestore'
+// import { FacebookAuthProvider, GoogleAuthProvider } from "firebase/auth";
+// import { FirebaseApp, FirebaseOptions, initializeApp, getApps } from 'firebase/app';
+// import { Analytics, getAnalytics } from 'firebase/analytics'
 
-export const firebaseConfig: FirebaseOptions = {
+
+export const firebaseConfig: Object = {
   apiKey: "AIzaSyDuM67qj3AYlYL0QkTSXOygQwrq2SazaUc",
   authDomain: "to-do-list-app-eee7d.firebaseapp.com",
   projectId: "to-do-list-app-eee7d",
@@ -13,15 +18,15 @@ export const firebaseConfig: FirebaseOptions = {
 }
 
 class Firebase {
-  private app: FirebaseApp = {} as FirebaseApp;
+  private app: firebase.app.App = {} as firebase.app.App;
 
-  constructor(protected configuracao: FirebaseOptions, protected name: string) {
+  constructor(protected configuracao: Object, protected name: string) {
     try {
       if (!this.isFirebaseInitialized()) {
-        this.app = initializeApp(this.configuracao, this.name);
+        this.app = firebase.initializeApp(this.configuracao, this.name);
         console.log('Firebase inicializado com sucesso');
       } else {
-        this.app = getApps()[0];
+        this.app = firebase.app(this.name);
         console.log('Firebase já estava inicializado');
       }
     } catch (error) {
@@ -30,29 +35,34 @@ class Firebase {
   }
 
   private isFirebaseInitialized() {
-    return getApps().length > 0
+    try {
+      return firebase.app(this.name)
+    } catch (error) {
+      return false
+    }
   }
 
-  getApp(): FirebaseApp {
+  getApp(): firebase.app.App {
     return this.app;
   }
 }
 
 class FirebaseAuth extends Firebase {
 
-  constructor(protected configuracao: FirebaseOptions, protected name: string) {
+  constructor(protected configuracao: Object, protected name: string) {
     super(configuracao, name)
   }
 
-  getAuth(): Auth {
-    return getAuth(super.getApp())
+  getAuth(): firebase.auth.Auth {
+    return firebase.auth(super.getApp())
   }
 
-  async entrar(email: string, password: string): Promise<UserCredential> {
+  async entrar(email: string, password: string): Promise<firebase.auth.UserCredential> {
     try {
       const auth = this.getAuth();
       if (!auth) throw new Error('Firebase auth não inicializado');
-      const credential = await signInWithEmailAndPassword(auth, email, password);
+
+      const credential = await auth.signInWithEmailAndPassword(email, password);
       // this.registerSession(credential)
       return credential
     } catch (error) {
@@ -63,11 +73,12 @@ class FirebaseAuth extends Firebase {
 
   async entrarComGoogle(): Promise<void> {
     try {
-      const provider = new GoogleAuthProvider();
-      const auth = this.getAuth();
 
-      const result: UserCredential = await signInWithPopup(auth, provider)
-      GoogleAuthProvider.credentialFromResult(result);
+      // const provider = new GoogleAuthProvider();
+      // const auth = this.getAuth();
+
+      // const result: firebase.auth.UserCredential = await auth.signInWithPopup(provider)
+      // GoogleAuthProvider.credentialFromResult(result);
 
     } catch (error) {
 
@@ -75,13 +86,13 @@ class FirebaseAuth extends Firebase {
     }
   }
 
-  async entrarComFacebook(): Promise<void>{
+  async entrarComFacebook(): Promise<void> {
     try {
-      const provider = new FacebookAuthProvider();
-      const auth = this.getAuth();
+      // const provider = new auth.FacebookAuthProvider();
+      // const auth = this.getAuth();
 
-      const result: UserCredential = await signInWithPopup(auth, provider)
-      FacebookAuthProvider.credentialFromResult(result);
+      // const result: UserCredential = await signInWithPopup(auth, provider)
+      // FacebookAuthProvider.credentialFromResult(result);
 
     } catch (error) {
 
@@ -89,17 +100,17 @@ class FirebaseAuth extends Firebase {
     }
   }
 
-  cadastrar(email: string, password: string): Promise<UserCredential> {
+  cadastrar(email: string, password: string): Promise<firebase.auth.UserCredential> {
     const auth = this.getAuth();
     if (!auth) throw new Error('Firebase auth não inicializado');
-    return createUserWithEmailAndPassword(auth, email, password)
+    return auth.createUserWithEmailAndPassword(email, password)
   }
 
   async sair(): Promise<void> {
     try {
       const auth = this.getAuth();
       if (!auth) throw new Error('Firebase auth não inicializado');
-      await signOut(auth);
+      await auth.signOut();
       // this.cleanSession();
       return
     } catch (error) {
@@ -114,23 +125,23 @@ class FirebaseAuth extends Firebase {
 }
 
 class FirebaseAnalytics extends Firebase {
-  constructor(protected configuracao: FirebaseOptions, protected name: string) {
+  constructor(protected configuracao: Object, protected name: string) {
     super(configuracao, name)
   }
 
-  getAnalytics(): Analytics {
-    return getAnalytics(super.getApp())
+  getAnalytics(): firebase.analytics.Analytics {
+    return firebase.analytics(super.getApp())
   }
 }
 
 class FirebaseFirestore extends Firebase {
-  constructor(protected configuracao: FirebaseOptions, protected name: string) {
+  constructor(protected configuracao: Object, protected name: string) {
     super(configuracao, name)
   }
 
-  /*  getFirestore(): Firestore {
-     return getFirestore(super.getApp())
-   } */
+  getFirestore(): firebase.firestore.Firestore {
+    return firebase.firestore(super.getApp())
+  }
 }
 
 export { Firebase, FirebaseAuth, FirebaseAnalytics, FirebaseFirestore }

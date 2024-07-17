@@ -1,9 +1,14 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { ItemListDAO } from "../../DAO/toDoList/itemListDAO";
+import { FirebaseContext } from "../../firebase/firebaseContext";
+import { IItemListDb } from "../../DAO/toDoList/itemList.model";
+import { generateUUID } from "../../adapters/uuidAdapter";
+
 
 interface IItemList {
-  key: number,
+  key: string,
   done: boolean,
   title: string,
   notes: string,
@@ -14,48 +19,122 @@ function ListComponent() {
   const [editingItem, setEditingItem] = useState<IItemList | null>(null);
   const [filteredItem, setFilteredItem] = useState<IItemList[]>([]);
 
+  const firebaseContext = useContext(FirebaseContext)
+
+  // Usar useRef para armazenar a instância do DAO
+  const daoRef = useRef<ItemListDAO>();
+
   useEffect(() => {
-    fillArray(0);
-  }, [])
+
+    if (!firebaseContext?.firebaseFirestore || !firebaseContext?.currentUser?.uid) {
+      return;
+    }
+
+    // Inicializar o DAO apenas uma vez
+    if (!daoRef.current) {
+      const firestore = firebaseContext.firebaseFirestore.getFirestore();
+      daoRef.current = new ItemListDAO(firestore);
+    }
+
+    const loadItems = async () => {
+      const firestore = firebaseContext?.firebaseFirestore.getFirestore();
+      if (!firestore) return;
+      const DAO = daoRef.current;
+      const id = firebaseContext?.currentUser?.uid
+      if (!id) return
+      const items = await DAO?.getItemListByID(id);
+      if (!items) return;
+      const data: IItemList[] = Array.isArray(items) ? items.map(i => {
+        return {
+          key: i.id,
+          done: i.status,
+          title: i.title,
+          notes: i.notes
+        }
+      }) : [{
+        key: items.id,
+        done: items.status,
+        title: items.title,
+        notes: items.notes
+      }]
+
+      setItems(data)
+    }
+
+    loadItems();
+  }, [firebaseContext?.currentUser?.uid, firebaseContext?.firebaseFirestore])
 
   useEffect(() => {
     setFilteredItem(items);
   }, [items]);
 
-  function fillArray(length: number) {
-    const newArray = Array.from({ length: length }, (_, index) => ({
-      key: index,
-      title: `Title ${index + 1}`,
-      notes: `Notes ${index + 1}`,
-      done: index % 2 === 0
-    }));
-    setItems([...newArray]);
-  };
+  // function fillArray(length: number) {
+  //   const newArray = Array.from({ length: length }, (_, index) => ({
+  //     key: index,
+  //     title: `Title ${index + 1}`,
+  //     notes: `Notes ${index + 1}`,
+  //     done: index % 2 === 0
+  //   }));
+  //   setItems([...newArray]);
+  // };
 
   function add() {
     setEditingItem({
       done: false,
-      key: -1,
+      key: '',
       notes: '',
       title: ''
     })
   }
 
-  function save() {
+  async function save() {
+    const DAO = daoRef.current;
 
     if (editingItem) {
       //Atualiza
-      if (editingItem.key > -1) {
-        setItems(items =>
-          items.map(item => (item.key === editingItem.key) ? { ...editingItem } : item
+      if (editingItem.key) {
+        try {
+          const itemUpdate: IItemListDb = {
+            id: editingItem.key,
+            id_user: firebaseContext?.currentUser?.uid ?? '',
+            notes: editingItem.notes,
+            status: editingItem.done,
+            title: editingItem.title
+          }
+          await DAO?.updateItemList(editingItem.key, itemUpdate)
+          setItems(items =>
+            items.map(item => (item.key === editingItem.key) ? { ...editingItem } : item
+            )
+
           )
-        )
+        } catch (error) {
+          console.log('Ocorreu um erro ao atualizar a tarefa')
+          console.error(error)
+        }
       } else {
-        //Adiciona
-        setItems([...items, {
-          ...editingItem,
-          key: items.length,
-        }])
+        try {
+
+          const itemInsert: IItemListDb = {
+            id: generateUUID(),
+            id_user: firebaseContext?.currentUser?.uid ?? '',
+            notes: editingItem.notes,
+            status: editingItem.done,
+            title: editingItem.title
+          }
+          const newItem = await DAO?.createItemList(itemInsert)
+          if (!newItem) return
+          //Adiciona
+          setItems([...items, {
+            ...editingItem,
+            key: newItem?.id,//pensar em gerar uma chave
+          }])
+
+        } catch (error) {
+          console.log('Ocorreu um erro ao atualizar a tarefa');
+          console.error(error)
+        } finally {
+          setEditingItem(null);
+        }
       }
 
       //Limpo o estado de editingItem
@@ -67,8 +146,16 @@ function ListComponent() {
     setEditingItem(item);
   }
 
-  function remove(key: number) {
-    setItems([...items.filter(item => item.key !== key)]);
+  async function remove(key: string) {
+
+    try {
+      const DAO = daoRef.current;
+      await DAO?.deleteItemList(key)
+      setItems([...items.filter(item => item.key !== key)]);
+    } catch (error) {
+      console.log("Ocorreu um erro ao remover a tarefa");
+      console.error(error)
+    }
   }
 
   function cancel() {
@@ -131,7 +218,9 @@ function ListComponent() {
 
             <button onClick={save} title="Save" className="flex items-center gap-1 bg-blue-500 hover:bg-blue-500 text-white px-3 py-1 rounded">
               {/* <FontAwesomeIcon icon={faSave}></FontAwesomeIcon> */}
-              Add Task</button>
+              
+              {(editingItem.key) ? 'Update Task' : 'Add Task'}
+              </button>
           </div>
         </div>
 
