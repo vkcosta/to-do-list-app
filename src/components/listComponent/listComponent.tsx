@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faClose, faEdit, faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { ItemListDAO } from "../../DAO/toDoList/itemListDAO";
 import { FirebaseContext } from "../../firebase/firebaseContext";
 import { IItemListDb } from "../../DAO/toDoList/itemList.model";
@@ -18,6 +18,7 @@ function ListComponent() {
   const [items, setItems] = useState<IItemList[]>([]);
   const [editingItem, setEditingItem] = useState<IItemList | null>(null);
   const [filteredItem, setFilteredItem] = useState<IItemList[]>([]);
+  const [inputSearch, setInputSearch] = useState('');
 
   const firebaseContext = useContext(FirebaseContext)
 
@@ -108,7 +109,7 @@ function ListComponent() {
 
           )
         } catch (error) {
-          console.log('Ocorreu um erro ao atualizar a tarefa')
+          console.error('Ocorreu um erro ao atualizar a tarefa')
           console.error(error)
         }
       } else {
@@ -130,7 +131,7 @@ function ListComponent() {
           }])
 
         } catch (error) {
-          console.log('Ocorreu um erro ao atualizar a tarefa');
+          console.error('Ocorreu um erro ao atualizar a tarefa');
           console.error(error)
         } finally {
           setEditingItem(null);
@@ -153,7 +154,7 @@ function ListComponent() {
       await DAO?.deleteItemList(key)
       setItems([...items.filter(item => item.key !== key)]);
     } catch (error) {
-      console.log("Ocorreu um erro ao remover a tarefa");
+      console.error("Ocorreu um erro ao remover a tarefa");
       console.error(error)
     }
   }
@@ -175,6 +176,7 @@ function ListComponent() {
   function filterItems(e: React.ChangeEvent<HTMLInputElement>) {
 
     const value: string = e.target.value?.toLocaleLowerCase() ?? '';
+    setInputSearch(value);
 
     if (value) {
       const findItems = items.filter(item => item.title.toLocaleLowerCase().includes(value));
@@ -182,6 +184,13 @@ function ListComponent() {
     } else {
       setFilteredItem(items);
     }
+  }
+
+  function limpar() {
+    const input: HTMLInputElement = document.getElementById('searchButton') as HTMLInputElement
+    if (input) input.value = ""
+    setFilteredItem(items)
+    setInputSearch('');
   }
 
   return (
@@ -218,23 +227,31 @@ function ListComponent() {
 
             <button onClick={save} title="Save" className="flex items-center gap-1 bg-blue-500 hover:bg-blue-500 text-white px-3 py-1 rounded">
               {/* <FontAwesomeIcon icon={faSave}></FontAwesomeIcon> */}
-              
+
               {(editingItem.key) ? 'Update Task' : 'Add Task'}
-              </button>
+            </button>
           </div>
         </div>
 
         :
         //Visualização normal
         <div className="w-1/2">
-          <div className="relative flex items-center">
+          <div className="relative flex items-center w-full">
             <FontAwesomeIcon icon={faSearch} className="absolute left-3 text-gray-500" />
             <input
+              id="searchButton"
               type="text"
               name="search"
+              placeholder="Texto aqui"
               className="pl-10 h-10 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
               onChange={(e) => filterItems(e)}
             />
+            {inputSearch && (
+              <button onClick={limpar} className="absolute right-3">
+                <FontAwesomeIcon icon={faClose} className="text-gray-500" />
+              </button>
+            )}
+
           </div>
 
           <div className="mt-4">

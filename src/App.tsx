@@ -16,7 +16,6 @@ function App() {
   //   }
   // }, [firebaseContext])
 
-  console.log('currentUser', firebaseContext?.currentUser)
 
   return (
     <div className="h-full">

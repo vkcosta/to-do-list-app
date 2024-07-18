@@ -29,16 +29,13 @@ export default function FormEntrar() {
       validateField(prop, formLogin[prop])
     }
 
-    console.log('logar', formLogin)
-
     const isValid = !Object.values(errors).some(error => error !== '') &&
       !Object.values(formLogin).some(value => value === '');
 
     if (isValid) {
 
       firebaseContext?.firebaseAuth?.entrar(formLogin.email, formLogin.password)
-        .then(result => {
-          console.log(result)
+        .then(_result => {
         })
         .catch((e) => {
           //Pensar numa forma de notificar - toast
@@ -89,9 +86,7 @@ export default function FormEntrar() {
 
     if (isValid) {
       login();
-    } else {
-      console.log('Formulário inválido');
-    }
+    } 
   };
 
 

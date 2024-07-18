@@ -24,10 +24,10 @@ class Firebase {
     try {
       if (!this.isFirebaseInitialized()) {
         this.app = firebase.initializeApp(this.configuracao, this.name);
-        console.log('Firebase inicializado com sucesso');
+        // console.log('Firebase inicializado com sucesso');
       } else {
         this.app = firebase.app(this.name);
-        console.log('Firebase já estava inicializado');
+        // console.log('Firebase já estava inicializado');
       }
     } catch (error) {
       console.error("Erro ao inicializar o Firebase", error);
