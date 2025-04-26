@@ -2,7 +2,7 @@
 # 📝 To-Do List - React + TypeScript + Firebase
 
 Aplicação simples de **To-Do List** criada com **React**, **TypeScript** e **CSS puro**, com autenticação Google via **Firebase Authentication**.  
-Funciona apenas no front-end, sem persistência de dados após logout.
+Funciona apenas no front-end, mas usa persistência de dados via **Firebase Cloud Firestore**.
 
 ## Funcionalidades
 
