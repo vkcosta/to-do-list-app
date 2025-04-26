@@ -37,5 +37,5 @@ Funciona apenas no front-end, sem persistência de dados após logout.
 
 4. Acesse:
    ```
-   http://localhost:5173
+   http://localhost:3000
    ```
