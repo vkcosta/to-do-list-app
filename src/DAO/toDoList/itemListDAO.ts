@@ -1,5 +1,5 @@
 import { IItemListDAO, IItemListDb } from "./itemList.model";
-import { Firestore, collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
+import { Firestore, collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc, getDoc } from 'firebase/firestore';
 
 export class ItemListDAO implements IItemListDAO {
 
@@ -39,16 +39,27 @@ export class ItemListDAO implements IItemListDAO {
   }
 
   async updateItemList(id: string, toDo: IItemListDb): Promise<IItemListDb> {
+    console.log(id, toDo);
     try {
       const taskDocRef = doc(this.db, this.collectionName, id);
-      const dataToUpdate = {
-        title: toDo.title,
-        notes: toDo.notes,
-        status: toDo.status
-      };
-      await updateDoc(taskDocRef, dataToUpdate);
-      return { ...toDo, id };
+      // console.log('taskDocRef', taskDocRef);
+
+      const docSnap = await getDoc(taskDocRef);
+      if (docSnap.exists()) {
+        // console.log('Documento encontrado:', docSnap.data()); // Verifique os dados
+        const dataToUpdate = {
+          title: toDo.title,
+          notes: toDo.notes,
+          status: toDo.status
+        };
+        await updateDoc(taskDocRef, dataToUpdate);
+        return { ...toDo, id };
+      } else {
+        console.log('Documento não encontrado ao tentar ler.');
+        throw new Error(`Documento com ID ${id} não encontrado.`);
+      }
     } catch (error) {
+      console.log('Erro ao atualizar ou ler:', error);
       throw error;
     }
   }
