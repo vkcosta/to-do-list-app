@@ -53,10 +53,10 @@ function ListComponent() {
           notes: i.notes
         }
       }) : [{
-        key: items.id,
-        done: items.status,
-        title: items.title,
-        notes: items.notes
+        key: (items as IItemListDb).id,
+        done: (items as IItemListDb).status,
+        title: (items as IItemListDb).title,
+        notes: (items as IItemListDb).notes
       }]
 
       setItems(data)

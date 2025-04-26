@@ -1,11 +1,8 @@
+import { initializeApp, FirebaseApp } from 'firebase/app';
+import { getAuth, GoogleAuthProvider, Auth, signInWithPopup, signInWithEmailAndPassword, UserCredential, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
+import { Firestore, getFirestore } from 'firebase/firestore';
+import { Analytics, getAnalytics } from 'firebase/analytics'
 import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import 'firebase/compat/firestore';
-// import { getFirestore } from 'firebase/firestore'
-// import { FacebookAuthProvider, GoogleAuthProvider } from "firebase/auth";
-// import { FirebaseApp, FirebaseOptions, initializeApp, getApps } from 'firebase/app';
-// import { Analytics, getAnalytics } from 'firebase/analytics'
-
 
 export const firebaseConfig: Object = {
   apiKey: "AIzaSyDuM67qj3AYlYL0QkTSXOygQwrq2SazaUc",
@@ -18,15 +15,15 @@ export const firebaseConfig: Object = {
 }
 
 class Firebase {
-  private app: firebase.app.App = {} as firebase.app.App;
+  private app: FirebaseApp = {} as FirebaseApp;
 
   constructor(protected configuracao: Object, protected name: string) {
     try {
       if (!this.isFirebaseInitialized()) {
-        this.app = firebase.initializeApp(this.configuracao, this.name);
+        this.app = initializeApp(this.configuracao, this.name);
         // console.log('Firebase inicializado com sucesso');
       } else {
-        this.app = firebase.app(this.name);
+        this.app = firebase.app(this.name) as FirebaseApp;
         // console.log('Firebase já estava inicializado');
       }
     } catch (error) {
@@ -42,27 +39,29 @@ class Firebase {
     }
   }
 
-  getApp(): firebase.app.App {
+  getApp(): FirebaseApp {
     return this.app;
   }
 }
 
 class FirebaseAuth extends Firebase {
+  private auth: Auth;
 
   constructor(protected configuracao: Object, protected name: string) {
     super(configuracao, name)
+    this.auth = getAuth(this.getApp());
   }
 
-  getAuth(): firebase.auth.Auth {
-    return firebase.auth(super.getApp())
+  getAuth(): Auth {
+    return this.auth;
   }
 
-  async entrar(email: string, password: string): Promise<firebase.auth.UserCredential> {
+  async entrar(email: string, password: string): Promise<UserCredential> {
     try {
       const auth = this.getAuth();
       if (!auth) throw new Error('Firebase auth não inicializado');
 
-      const credential = await auth.signInWithEmailAndPassword(email, password);
+      const credential = await signInWithEmailAndPassword(auth, email, password);
       // this.registerSession(credential)
       return credential
     } catch (error) {
@@ -71,18 +70,19 @@ class FirebaseAuth extends Firebase {
     }
   }
 
-  async entrarComGoogle(): Promise<void> {
+  async entrarComGoogle() {
     try {
 
-      // const provider = new GoogleAuthProvider();
-      // const auth = this.getAuth();
+      const provider = new GoogleAuthProvider();
+      const auth = this.getAuth();
 
-      // const result: firebase.auth.UserCredential = await auth.signInWithPopup(provider)
-      // GoogleAuthProvider.credentialFromResult(result);
+      return await signInWithPopup(auth, provider);
+
 
     } catch (error) {
 
       console.error('Ocorreu um erro ao autenticar com Google.', error);
+      throw error;
     }
   }
 
@@ -100,17 +100,17 @@ class FirebaseAuth extends Firebase {
     }
   }
 
-  cadastrar(email: string, password: string): Promise<firebase.auth.UserCredential> {
+  cadastrar(email: string, password: string): Promise<UserCredential> {
     const auth = this.getAuth();
     if (!auth) throw new Error('Firebase auth não inicializado');
-    return auth.createUserWithEmailAndPassword(email, password)
+    return createUserWithEmailAndPassword(auth, email, password)
   }
 
   async sair(): Promise<void> {
     try {
       const auth = this.getAuth();
       if (!auth) throw new Error('Firebase auth não inicializado');
-      await auth.signOut();
+      await signOut(auth);
       // this.cleanSession();
       return
     } catch (error) {
@@ -129,8 +129,8 @@ class FirebaseAnalytics extends Firebase {
     super(configuracao, name)
   }
 
-  getAnalytics(): firebase.analytics.Analytics {
-    return firebase.analytics(super.getApp())
+  getAnalytics(): Analytics {
+    return getAnalytics(super.getApp())
   }
 }
 
@@ -139,8 +139,8 @@ class FirebaseFirestore extends Firebase {
     super(configuracao, name)
   }
 
-  getFirestore(): firebase.firestore.Firestore {
-    return firebase.firestore(super.getApp())
+  getFirestore(): Firestore {
+    return getFirestore(super.getApp())
   }
 }
 
